@@ -19,6 +19,8 @@
     1. Use `ansible-navigator` to inspect new image
 
 ## Lab 2 - Execute Plays with `ansible-navigator`
-1. 
+ToDo:
+* have lab-setup create siduser accounts on target machines.
+* figure out how to use ansible-navigator to decrypt ansible-vault encrypted files. 
 
 
