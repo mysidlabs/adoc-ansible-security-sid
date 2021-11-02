@@ -1,51 +1,24 @@
-# ansible-security
-Project for Sirius Security  Immersion Day
+# Ansible Security Immersion Day Lab Outline
+## Initial Setup
+1. Fork https://github.com/mysidlabs/sid-ansible-security
+1. Create local siduser.pem file:
+    1. Copy raw contents of: https://github.com/{{ YOUR ACCOUNT GOES HERE }}/sid-ansible-security/blob/master/lab-key/siduser-sec-sid.pem and paste into a file in your working ssh directory.
+1. Connect to your jump host:
+    *       ssh -i siduser.pem ec2-user@siduser###.jump.mysidlabs.com
+1. Clone your forked repo.
+    *       git clone https://github.com/dmatthews-sirius/sid-ansible-security.git
 
-# Components
-* Cisco AMP / SecureX
-* Jira
-* Palo Alto NGFW
+## Lab 1 - Execution Environments
+1. Review project structure
+1. Review execution environments
+    1. Review ee project files
+    1. Review [`podman`](https://https://podman.io/) vs. `docker`
+    1. Review [`ansible-buider`](https://www.ansible.com/blog/introduction-to-ansible-builder)
+    1. Build sec-sid-mitigation-ee
+        *       ansible-builder build --tag sec_sid_ee
+    1. Use `ansible-navigator` to inspect new image
 
-# Setup
-* turn on SEC-PAN-Demo in EC2 us-east-2
+## Lab 2 - Execute Plays with `ansible-navigator`
+1. 
 
-## Lab 1 Execution Environments
-* Execution Environment Overview
-* PanOS EE
-* Jira EE
-* SNOW EE
-
-## ansible-navigator
-https://ansible-navigator.readthedocs.io/en/latest
-
-## ansible-builder
-https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.0-ea/html-single/ansible_builder_guide/index
-
-
-Discuss using automation hub collections, getting an offline oauth2 token, etc.
-
-
-## Lab 2 Authentication
-* Jira Authentication
-* SNOW Authentiaction
-* AC REST Authentication
-
-## Lab 3 Data Interpretation in AC using plugins
-* 
-
-
-role in paloalto folder: add-simple-rule.yml -- localhost executed play.
-
-
-
-### Lab 1 - How to build an execution environment
-* https://www.ansible.com/blog/introduction-to-ansible-builder
-
-    $ pip install ansible-builder
-
-
-    https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
-
-    
-    
 
