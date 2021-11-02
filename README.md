@@ -42,5 +42,10 @@ role in paloalto folder: add-simple-rule.yml -- localhost executed play.
 * https://www.ansible.com/blog/introduction-to-ansible-builder
 
     $ pip install ansible-builder
+
+
+    https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+
+    
     
 
