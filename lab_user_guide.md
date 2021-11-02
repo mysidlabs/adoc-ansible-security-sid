@@ -52,7 +52,8 @@
     ```bash
     ansible-navigator run create-soc-ticket.yml --extra-vars "@dev-data/amp_single_event.json" --ask-vault-pass
     ```
-
+1. Vault Password is: `Ger1974!`
+1. Instructor will show tickets added to JIRA project
 1. Edit `roles/paloalto/tasks/main.yml` `rule_name:` key and `roles/jira/tasks/main.yml` `summary:` key to include your siduserID.
 
 1. Execute `amp-mitigation-play.yml` with `ansible-navigator`:
@@ -74,10 +75,20 @@
     * Add project refresh node.
     * Add template node.
     * save
-1. Go back to ssh terminal and execute the curl script:
+1. Review the AC REST API: `https://rhap2.mysidlabs.com/api/v2/`
+    1. Look at the `/api/v2/workflow_job_templates/` details.
+    1. determine the id of your workflow.
+1. Go back to ssh terminal and edit ./simulate-amp-securex-POST-request
+    ```yaml
+     1 curl --location --request POST 'https://rhap2.mysidlabs.com/api/v2/workflow_job_templates/{{ CHANGE TO YOUR WORKFLOW ID }}/launch/' \
+    ```
+1. Execute the curl script:
     ```bash
     ./simulate-amp-securex-POST-request
     ```
+1. In AC go to the jobs list and view your workflow in progress.
+
+## FINIS
 
 
 
