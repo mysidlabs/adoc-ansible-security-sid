@@ -56,25 +56,67 @@ Execute the following command to decrypt the group_vars/all.yml file:
 
 
 ## Lab 1 - `ansible-navigator` and execution environments
-1. Review project structure
+### Review the project structure
 ```bash
     cd sid-ansible-security
 ```
-1. Review execution environments
-    1. Review ee project files
-    1. Review [`podman`](https://https://podman.io/) vs. `docker`
-    1. Review [`ansible-buider`](https://www.ansible.com/blog/introduction-to-ansible-builder)
-    1. Build sec-sid-mitigation-ee
+
+### Use `ansible-navigator` to inspect new image:
+```bash
+siduser101@jump:~/sid-ansible-security$ ansible-navigator images
+```
+
+```
+  NAME                               TAG      EXECUTION ENVIRONMENT         CREATED          SIZE
+0│ansible-builder                    latest                   False         8 hours ago      769 MB
+1│ansible-navigator-demo-ee          0.6.0                     True         5 months ago     1.35 GB
+2│ansible-runner                     latest                    True         8 hours ago      876 MB
+3│sid-security-ee                    latest                    True         2 hours ago      908 MB
+4│sid-security-ee (primary)          latest                    True         2 months ago     681 MB
+
+
+
+
+
+
+
+
+
+
+
+
+^f/PgUp page up      ^b/PgDn page down      ↑↓ scroll	   esc back	 [0-9] goto	 :help help
+
+```
+
+
+### Review execution environments
+1. Review ee project files
+1. Review [`podman`](https://https://podman.io/) vs. `docker`
+1. Review [`ansible-buider`](https://www.ansible.com/blog/introduction-to-ansible-builder)
+1. Build sec-sid-mitigation-ee
 
 > :warning: **OPTIONAL** building this execution environment is optional.  It will take a couple of minutes to complete.
 ```bash
     ansible-builder build --tag sec_sid_ee
 ```
-1. Use `podman` to list the local images:
+### Use `podman` to list the local images:
 ```bash
-    podman images
+siduser101@jump:~/sid-ansible-security$ podman images
+REPOSITORY                                 TAG         IMAGE ID      CREATED            SIZE
+<none>                                     <none>      cc8028f10813  About an hour ago  907 MB
+<none>                                     <none>      a04cc3797cca  About an hour ago  913 MB
+<none>                                     <none>      774fabe4d536  About an hour ago  881 MB
+<none>                                     <none>      0643cb081bc6  About an hour ago  896 MB
+localhost/sid-security-ee                  latest      9ad85776c89f  About an hour ago  908 MB
+<none>                                     <none>      ee55b78317df  About an hour ago  791 MB
+<none>                                     <none>      c5809904a915  About an hour ago  891 MB
+quay.io/ansible/ansible-runner             latest      912ba7432e89  7 hours ago        876 MB
+quay.io/ansible/ansible-builder            latest      35d2481da9e9  8 hours ago        769 MB
+ghcr.io/mysidlabs/sid-security-ee          latest      7d187fedb8ea  2 months ago       681 MB
+quay.io/ansible/ansible-navigator-demo-ee  0.6.0       e65e4777caa3  5 months ago       1.35 GB
 ```
-1. Use `ansible-navigator` to inspect new image
+
 
 ## Lab 2 - Execute Plays with `ansible-navigator`
 1. Review `ansible-navigator.yml`
