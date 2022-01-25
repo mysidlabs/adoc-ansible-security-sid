@@ -2,29 +2,26 @@
 ## Initial Setup
 ### Fork the lab repo and connect to you r jump box.
 1. Fork https://github.com/mysidlabs/sid-ansible-security
-1. Connect to your jump host:
-    ```
-    >>  ssh siduser###@siduser###.jump.mysidlabs.com
-    Password: Ger1974!
-    ```
-    You should then see the following:
-    ```bash
-        Welcome to the CDW/Sirius Red Hat Immersion Day lab environment
-        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        Login Succeeded!
-        siduser101@jump:~$ 
-    ```
-1. Clone your forked repo.
-    ```bash
-        siduser101@jump:~$ git clone https://github.com/<YOUR GIT HUB ACCOUNT>/sid-ansible-security.git
-        Cloning into 'sid-ansible-security'...
-        remote: Enumerating objects: 98, done.
-        remote: Counting objects: 100% (98/98), done.
-        remote: Compressing objects: 100% (56/56), done.
-        remote: Total 98 (delta 26), reused 90 (delta 20), pack-reused 0
-        Unpacking objects: 100% (98/98), 18.73 KiB | 958.00 KiB/s, done.
-        siduser101@jump:~$
-    ```
+1. Connect to your jump host where ### is replaced by your user number:
+```
+>>  ssh siduser###@siduser###.jump.mysidlabs.com
+Password: Ger1974!
+```
+You should then see the following:
+```bash
+    Welcome to the CDW/Sirius Red Hat Immersion Day lab environment
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+Login Succeeded!
+Cloning into 'sid-ansible-security'...
+remote: Enumerating objects: 125, done.
+remote: Counting objects: 100% (125/125), done.
+remote: Compressing objects: 100% (69/69), done.
+remote: Total 125 (delta 44), reused 111 (delta 32), pack-reused 0
+Receiving objects: 100% (125/125), 22.19 KiB | 11.09 MiB/s, done.
+Resolving deltas: 100% (44/44), done.
+siduser270@jump:~$ 
+```
+
 
 ### Review jump environment
 Installed tools:
@@ -39,6 +36,17 @@ Installed tools:
 
     We will be editing text files throught the course of this lab.  Both `nano` and `vim` are available.  If you are inexperienced with `vim`,  `nano` will be the better choice, as it behaves more like a basic text editor.
 
+
+## Lab 1 - `ansible-navigator` and execution environments
+### Review the project structure
+```bash
+siduser270@jump:~$ cd sid-ansible-security/
+siduser270@jump:~/sid-ansible-security$ ls
+amp-mitigation-play.yml  ansible-navigator.yml     create-soc-ticket.yml  ee              group_vars  lab-key        README.md  simulate-amp-securex-POST-request
+ansible.cfg              create-security-rule.yml  dev-data               filter_plugins  inventory   navigator-log  roles
+siduser270@jump:~/sid-ansible-security$ 
+
+```
 ### Decrypt variables file
 Note that ansible-vault is not currently supported by ansible-navigator.  We will need to decrypt are group_vars/all.yml file.
 
@@ -53,42 +61,77 @@ Execute the following command to decrypt the group_vars/all.yml file:
     Decryption successful
     siduser101@jump:~/sid-ansible-security$
 ```
-
-
-## Lab 1 - `ansible-navigator` and execution environments
-### Review the project structure
+### Use `podman`, `ansible-builder` and `ansible-navigator` to work with execution environments
+Type the following at the command line:
 ```bash
-    cd sid-ansible-security
+siduser270@jump:~/sid-ansible-security$ podman images
+REPOSITORY  TAG         IMAGE ID    CREATED     SIZE
+siduser270@jump:~/sid-ansible-security$ 
 ```
+Notice that there are currently no local images.
+Type the `ansible-navigator` command, first making sure that you are in the root of the sid-ansible-security project:
+```bash
+siduser270@jump:~/sid-ansible-security$ ansible-navigator
+---------------------------------------------------------------------------
+Execution environment image and pull policy overview
+---------------------------------------------------------------------------
+Execution environment image name:  ghcr.io/mysidlabs/sid-security-ee:latest
+Execution environment image tag:   latest
+Execution environment pull policy: missing
+Execution environment pull needed: True
+---------------------------------------------------------------------------
+Updating the execution environment
+---------------------------------------------------------------------------
+Trying to pull ghcr.io/mysidlabs/sid-security-ee:latest...
+Getting image source signatures
+Copying blob 2b28c7d19219 done  
+Copying blob ab4052451ca3 done  
+Copying blob aadba1834798 done  
+Copying blob 1a80e05e2ae5 done  
+Copying blob 6480d4237baa done  
+Copying blob 4bf9522da935 done  
+Copying blob 01831b54c91c done  
+Copying blob 2cc40fcd238a done  
+Copying blob 1352d2306a8c done  
+Copying blob fb99cf4e728e done  
+Copying blob ad10175f8b05 done  
+Copying blob 5d1b0663c816 done  
+Copying blob 688f93a4c9a9 done  
+Copying blob a371d1a50b3c done  
+Copying blob 15efb5cc51b2 done  
+Copying blob d39a364c4e6f done  
+Copying blob f84f34d1d332 done  
+Copying blob 6bca7fed2387 done  
+Copying config 7d187fedb8 done  
+Writing manifest to image destination
+Storing signatures
+7d187fedb8ea9d3df35713baed9f00d7f8bb88549af5f788e8288fe9da7b8cd9
+siduser270@jump:~/sid-ansible-security$
+```
+Since this is our first execution of ansible-navigator it has pulled the execution environment specified in the `ansible-navigator.yml` file which is the configuration file for this tool.
 
-### Use `ansible-navigator` to inspect new image:
+> :warning: Follow along with the instructor as he reviews the `ansible-navigator.yml` config and also looks at some of the sub-commands of the tool.
+
+
+Use `ansible-navigator` to inspect new image:
 ```bash
 siduser101@jump:~/sid-ansible-security$ ansible-navigator images
 ```
 
 ```
-  NAME                               TAG      EXECUTION ENVIRONMENT         CREATED          SIZE
-0│ansible-builder                    latest                   False         8 hours ago      769 MB
-1│ansible-navigator-demo-ee          0.6.0                     True         5 months ago     1.35 GB
-2│ansible-runner                     latest                    True         8 hours ago      876 MB
-3│sid-security-ee                    latest                    True         2 hours ago      908 MB
-4│sid-security-ee (primary)          latest                    True         2 months ago     681 MB
+  NAME                             TAG      EXECUTION ENVIRONMENT	CREATED         SIZE
+0│sid-security-ee (primary)        latest                    True	2 months ago    681 MB
 
 
 
 
 
 
-
-
-
-
-
-
-^f/PgUp page up      ^b/PgDn page down      ↑↓ scroll	   esc back	 [0-9] goto	 :help help
+^f/PgUp page up    ^b/PgDn page down    ↑↓ scroll    esc back    [0-9] goto    :help help
 
 ```
 
+> :warning: Again, follow along with the instructor as he explores `sid-security-ee` execution environment.
 
 ### Review execution environments
 1. Review ee project files
@@ -119,31 +162,15 @@ quay.io/ansible/ansible-navigator-demo-ee  0.6.0       e65e4777caa3  5 months ag
 
 
 ## Lab 2 - Execute Plays with `ansible-navigator`
-1. Review `ansible-navigator.yml`
-
-    Make sure execution-environment is set to:
-```yaml
-    execution-environment:
-      enabled: true
-      container-engine: podman
-      image: sec_sid_ee:latest
-      pull-policy: missing
-```
-1. Review `ansible-vault` and look at:
-    ```
-        group_vars/all.yml
-        roles/paloalto/vars/main.yml
-        roles/jira/vars/main.yml
-    ```
-1. Edit `create-secuirty-rule.yml` and modify rule_name key to:
+1. The instructor will log into the lab PaloAlto firewall and review the existing policies.
+1. Edit `create-security-rule.yml` and modify rule_name key to:
     ```yaml
         rule_name: "siduser###- Block amp_{{ item.detection_id }}"
     ```
-1. Execute the `create-security-rule.yml` with `ansible-navigator`
+1. Review and then execute the `create-security-rule.yml` with `ansible-navigator`
     ```bash
-    ansible-navigator run create-security-rule.yml --extra-vars "@dev-data/amp_single_event.json" --ask-vault-pass
+    ansible-navigator run create-security-rule.yml --extra-vars "@dev-data/amp_single_event.json" 
     ```
-1. Vault Password is: `Ger1974!`
 1. Instructor will show rules added to Palo Alto NGFW
 1. Edit `create-soc-ticket.yml` and modify summary key to:
     ```yaml
@@ -151,7 +178,7 @@ quay.io/ansible/ansible-navigator-demo-ee  0.6.0       e65e4777caa3  5 months ag
     ```
 1. Execute the `create-soc-ticket.yml` playbook with `ansible-navigator`
     ```bash
-    ansible-navigator run create-soc-ticket.yml --extra-vars "@dev-data/amp_single_event.json" --ask-vault-pass
+    ansible-navigator run create-soc-ticket.yml --extra-vars "@dev-data/amp_single_event.json" 
     ```
 1. Vault Password is: `Ger1974!`
 1. Instructor will show tickets added to JIRA project
@@ -159,7 +186,7 @@ quay.io/ansible/ansible-navigator-demo-ee  0.6.0       e65e4777caa3  5 months ag
 
 1. Execute `amp-mitigation-play.yml` with `ansible-navigator`:
     ```bash
-    ansible-navigator run amp-mitigation-play.yml --extra-vars "@dev-data/amp_single_event.json" --ask-vault-pass
+    ansible-navigator run amp-mitigation-play.yml --extra-vars "@dev-data/amp_single_event.json" 
     ```
 
 
